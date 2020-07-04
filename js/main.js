@@ -27,7 +27,8 @@ allFieldset.forEach(function (fieldElement) {
 var activePin = document.querySelector('.map__pin--main');
 var pinListElement = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content;
-// var cardTemplate = document.querySelector('#card').content;
+var cardTemplate = document.querySelector('#card').content;
+var map = document.querySelector('.map');
 
 var getRandomArray = function (arr) {
   var newArray = [];
@@ -75,6 +76,7 @@ var selectObject = function () {
 
 var renderPin = function (data) {
   var pinElement = pinTemplate.cloneNode(true);
+  pinElement.querySelector('.map__pin').style.display = 'none';
   pinElement.querySelector('img').src = data.author.avatar;
   pinElement.querySelector('img').alt = data.offer.title;
   pinElement.querySelector('.map__pin').style.left = data.location.x + 'px';
@@ -82,9 +84,11 @@ var renderPin = function (data) {
 
   return pinElement;
 };
-/*
+
 var renderCard = function (data) {
   var cardElement = cardTemplate.cloneNode(true);
+  cardElement.querySelector('.map__card').style.display = 'none';
+  cardElement.querySelector('.popup__title').textContent = data.offer.title;
   cardElement.querySelector('.popup__title').textContent = data.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = data.offer.adress;
   cardElement.querySelector('.popup__text--price').textContent = data.offer.price + 'Р/ночь';
@@ -102,26 +106,49 @@ var renderCard = function (data) {
 
   return cardElement;
 };
-*/
-var pinFragment = document.createDocumentFragment();
+
+var Fragment = document.createDocumentFragment();
 for (var c = 0; c < NUMBER_PIN; c++) {
   var offer = selectObject();
-  /*  if (c === 0) {
-      pinFragment.appendChild(renderCard(offer));
-  }*/
-  pinFragment.appendChild(renderPin(offer));
+  Fragment.appendChild(renderCard(offer));
+  Fragment.appendChild(renderPin(offer));
 }
 
+pinListElement.prepend(Fragment);
 var adressInput = document.querySelector('#address');
+
+var allPins = pinListElement.querySelectorAll('.map__pin:not(.map__pin--main)');
+var allCards = pinListElement.querySelectorAll('.map__card');
+var cardCloseButtons = pinListElement.querySelectorAll('.popup__close');
+
 var activePageFunc = function () {
   allFieldset.forEach(function (fieldElement) {
     fieldElement.removeAttribute('disabled');
   });
-  document.querySelector('.map').classList.remove('map--faded');
+  allPins.forEach(function (pin) {
+    pin.style.display = 'block';
+  });
+  map.classList.remove('map--faded');
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
-  pinListElement.prepend(pinFragment);
   adressInput.value = (parseInt(activePin.style.left, 10) + PIN_WIDTH / 2) + ', ' + (parseInt(activePin.style.top, 10) + PIN_HEIGHT);
 };
+
+allPins.forEach(function (pin, i) {
+  pin.addEventListener('click', function () {
+    allCards.forEach(function (card) {
+      card.style.display = 'none';
+    });
+    allCards[i].style.display = 'block';
+  });
+  cardCloseButtons[i].addEventListener('click', function () {
+    allCards[i].style.display = 'none';
+  });
+  cardCloseButtons[i].addEventListener('click', function (evt) {
+    if (evt.key === 'Enter') {
+      allCards[i].style.display = 'none';
+    }
+  });
+});
 
 // Активация страницы
 activePin.addEventListener('mousedown', function (evt) {
@@ -200,10 +227,31 @@ roomInput.onchange = function () {
     guestInput.options[0].removeAttribute('disabled');
     guestInput.options[1].removeAttribute('disabled');
     guestInput.options[2].removeAttribute('disabled');
+
   } else if (roomInput.value === '100') {
     guestInput.options[0].setAttribute('disabled', '');
     guestInput.options[1].setAttribute('disabled', '');
     guestInput.options[2].setAttribute('disabled', '');
     guestInput.options[3].removeAttribute('disabled');
+  }
+};
+
+// синхронизация полей время заезда и выезда
+var timeInInput = document.querySelector('#timein');
+var timeOutInput = document.querySelector('#timeout');
+
+timeInInput.onchange = function () {
+  if (timeInInput.value === '12:00') {
+    timeOutInput.options[1].setAttribute('disabled', '');
+    timeOutInput.options[2].setAttribute('disabled', '');
+    timeOutInput.options[0].removeAttribute('disabled');
+  } else if (timeInInput.value === '13:00') {
+    timeOutInput.options[0].setAttribute('disabled', '');
+    timeOutInput.options[2].setAttribute('disabled', '');
+    timeOutInput.options[1].removeAttribute('disabled');
+  } else if (timeInInput.value === '14:00') {
+    timeOutInput.options[0].setAttribute('disabled', '');
+    timeOutInput.options[1].setAttribute('disabled', '');
+    timeOutInput.options[2].removeAttribute('disabled');
   }
 };
