@@ -22,4 +22,40 @@
 
     return cardElement;
   };
+
+  // Функция удаления карточки.
+  var cardDelete = function () {
+    var card = window.ConstModule.pinListElement.querySelector('.map__card');
+    var buttonClose = card.querySelector('.popup__close');
+    buttonClose.addEventListener('click', function () {
+      card.remove();
+    });
+
+    var onPopupEscPress = function (evt) {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        card.remove();
+        document.removeEventListener('keydown', onPopupEscPress);
+      }
+    };
+
+    document.addEventListener('keydown', onPopupEscPress);
+  };
+
+  var allPins = window.ConstModule.pinListElement.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+  // функция показа карточки при нажатии на пин.
+  allPins.forEach(function (pin, i) {
+    pin.addEventListener('click', function () {
+      if (!window.ConstModule.pinListElement.querySelector('.map__card')) {
+        window.ConstModule.pinListElement.prepend(window.renderCard(window.offerModule.offer[i]));
+        cardDelete();
+      } else {
+        var card = window.ConstModule.pinListElement.querySelector('.map__card');
+        card.remove();
+        window.ConstModule.pinListElement.prepend(window.renderCard(window.offerModule.offer[i]));
+        cardDelete();
+      }
+    });
+  });
 })();
