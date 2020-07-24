@@ -5,7 +5,7 @@
   var adressInput = document.querySelector('#address');
   var activePin = document.querySelector('.map__pin--main');
   var LEFT_MOUSE_BUTTON = 0;
-  var MAIN_PIN_WIDTH = 65;
+  var MAIN_PIN_HALF_WIDTH = 32;
 
   activePin.addEventListener('mousedown', function (evt) {
     if (evt.button === LEFT_MOUSE_BUTTON) {
@@ -32,30 +32,30 @@
           y: moveEvt.clientY
         };
 
-        if ((activePin.offsetTop - shift.y) >= window.ConstModule.COORDINATE_MIN_Y && (activePin.offsetTop - shift.y) <= window.ConstModule.COORDINATE_MAX_Y) {
+        if ((activePin.offsetTop - shift.y) >= window.ConstModule.COORDINATE_MIN_Y - window.ConstModule.PIN_HEIGHT && (activePin.offsetTop - shift.y) <= window.ConstModule.COORDINATE_MAX_Y - window.ConstModule.PIN_HEIGHT) {
           activePin.style.top = (activePin.offsetTop - shift.y) + 'px';
         } else {
           if ((activePin.offsetTop - shift.y) <= window.ConstModule.COORDINATE_MIN_Y) {
-            activePin.style.top = window.ConstModule.COORDINATE_MIN_Y + 'px';
+            activePin.style.top = window.ConstModule.COORDINATE_MIN_Y - window.ConstModule.PIN_HEIGHT + 'px';
           } else {
-            activePin.style.top = window.ConstModule.COORDINATE_MAX_Y + 'px';
+            activePin.style.top = window.ConstModule.COORDINATE_MAX_Y - window.ConstModule.PIN_HEIGHT + 'px';
           }
         }
 
-        if ((activePin.offsetLeft - shift.x) >= window.ConstModule.COORDINATE_MIN_X - (MAIN_PIN_WIDTH / 2) && (activePin.offsetLeft - shift.x) <= (window.ConstModule.COORDINATE_MAX_X - (MAIN_PIN_WIDTH / 2))) {
+        if ((activePin.offsetLeft - shift.x) >= window.ConstModule.COORDINATE_MIN_X - (MAIN_PIN_HALF_WIDTH) && (activePin.offsetLeft - shift.x) <= (window.ConstModule.COORDINATE_MAX_X - (MAIN_PIN_HALF_WIDTH))) {
           activePin.style.left = (activePin.offsetLeft - shift.x) + 'px';
         } else {
           if ((activePin.offsetLeft - shift.x) <= window.ConstModule.COORDINATE_MIN_X) {
-            activePin.style.left = window.ConstModule.COORDINATE_MIN_X - (MAIN_PIN_WIDTH / 2) + 'px';
+            activePin.style.left = window.ConstModule.COORDINATE_MIN_X - (MAIN_PIN_HALF_WIDTH) + 'px';
           } else {
-            activePin.style.left = window.ConstModule.COORDINATE_MAX_X - (MAIN_PIN_WIDTH / 2) + 'px';
+            activePin.style.left = window.ConstModule.COORDINATE_MAX_X - (MAIN_PIN_HALF_WIDTH) + 'px';
           }
         }
       };
 
       var onMouseUp = function (upEvt) {
         upEvt.preventDefault();
-        adressInput.value = (parseInt(activePin.style.left, 10) + MAIN_PIN_WIDTH) + ', ' + (parseInt(activePin.style.top, 10) + window.ConstModule.PIN_HEIGHT);
+        adressInput.value = (activePin.offsetLeft + MAIN_PIN_HALF_WIDTH) + ',' + (activePin.offsetTop + window.ConstModule.PIN_HEIGHT);
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
 
