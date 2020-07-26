@@ -5,7 +5,6 @@
   var activePin = document.querySelector('.map__pin--main');
   var map = document.querySelector('.map');
   var pinListElement = document.querySelector('.map__pins');
-  var allPins = pinListElement.querySelectorAll('.map__pin:not(.map__pin--main)');
   var allFieldset = document.querySelectorAll('fieldset, select');
 
   allFieldset.forEach(function (fieldElement) {
@@ -17,13 +16,13 @@
       fieldElement.removeAttribute('disabled');
     });
 
-    allPins.forEach(function (pin) {
-      pin.style.display = 'block';
-    });
-
     map.classList.remove('map--faded');
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 
+    var allPins = pinListElement.querySelectorAll('.map__pin:not(.map__pin--main)');
+    allPins.forEach(function (pin) {
+      pin.style.display = 'block';
+    });
   };
 
   // Активация страницы

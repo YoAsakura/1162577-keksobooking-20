@@ -43,6 +43,7 @@
         description: 'Строка с описанием',
         photos: OBJECT_PHOTOS[window.MathModule.randomInteger(0, OBJECT_PHOTOS.length)],
       },
+
       location: {
         x: window.MathModule.randomInteger(COORDINATE_MAX_X - PIN_WIDTH, COORDINATE_MIN_X + PIN_WIDTH),
         y: window.MathModule.randomInteger(COORDINATE_MAX_Y, COORDINATE_MIN_Y)
