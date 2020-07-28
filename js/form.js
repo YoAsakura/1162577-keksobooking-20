@@ -4,6 +4,8 @@
 (function () {
   var MAX_PRICE = 1000000;
   var MIN_PRICE = 0;
+  var START_COORDS_ACTIVE_PIN_Y = 375;
+  var START_COORDS_ACTIVE_PIN_X = 570;
 
   var priceInput = document.querySelector('#price');
   var typeHouseInput = document.querySelector('#type');
@@ -101,4 +103,36 @@
       timeOutInput.options[2].removeAttribute('disabled');
     }
   };
+
+  // Отправка формы и возвращение страницы в исходное состояние
+  var form = document.querySelector('.ad-form');
+  var map = document.querySelector('.map');
+  var allFieldset = document.querySelectorAll('fieldset, select');
+  var pinListElement = document.querySelector('.map__pins');
+  var formResetButton = document.querySelector('.ad-form__reset');
+
+  var submitHandler = function (evt) {
+    window.save(new FormData(form), function () {
+      document.querySelector('.ad-form').classList.add('ad-form--disabled');
+      allFieldset.forEach(function (fieldElement) {
+        fieldElement.setAttribute('disabled', 'disabled');
+      });
+      map.classList.add('map--faded');
+      var allPins = pinListElement.querySelectorAll('.map__pin:not(.map__pin--main)');
+      allPins.forEach(function (pin) {
+        pin.style.display = 'none';
+      });
+      form.reset();
+      activePin.style.top = START_COORDS_ACTIVE_PIN_Y + 'px';
+      activePin.style.left = START_COORDS_ACTIVE_PIN_X + 'px';
+      activePin.reset();
+    });
+    evt.preventDefault();
+  };
+
+  formResetButton.addEventListener('click', function () {
+    form.reset();
+  });
+
+  form.addEventListener('submit', submitHandler);
 })();

@@ -51,11 +51,11 @@
             activePin.style.left = window.ConstModule.COORDINATE_MAX_X - (MAIN_PIN_HALF_WIDTH) + 'px';
           }
         }
+        adressInput.value = (activePin.offsetLeft + MAIN_PIN_HALF_WIDTH) + ',' + (activePin.offsetTop + window.ConstModule.PIN_HEIGHT);
       };
 
       var onMouseUp = function (upEvt) {
         upEvt.preventDefault();
-        adressInput.value = (activePin.offsetLeft + MAIN_PIN_HALF_WIDTH) + ',' + (activePin.offsetTop + window.ConstModule.PIN_HEIGHT);
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
 

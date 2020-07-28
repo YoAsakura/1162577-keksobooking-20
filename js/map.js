@@ -2,10 +2,11 @@
 (function () {
 
   var successHandler = function (author) {
+    var QUANITY_PIN = 8;
     var pinListElement = document.querySelector('.map__pins');
     var fragment = document.createDocumentFragment();
 
-    for (var c = 0; c < 8; c++) {
+    for (var c = 0; c < QUANITY_PIN; c++) {
       fragment.appendChild(window.renderPin(author[c]));
     }
 
